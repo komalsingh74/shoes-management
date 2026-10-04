@@ -1,0 +1,171 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { Search, Plus, Pencil, Ruler, Users, Footprints } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+
+type Item = { id: string; uk: string; us: string; eu: string; group: string; length: number; grading: string; status: "Active" | "Inactive" };
+
+const seed: Item[] = [
+  { id: "SZ-001", uk: "7", us: "8", eu: "41", group: "Adult", length: 265, grading: "+8.5 mm per size", status: "Active" },
+  { id: "SZ-002", uk: "8", us: "9", eu: "42", group: "Adult", length: 273, grading: "+8.5 mm per size", status: "Active" },
+  { id: "SZ-003", uk: "2", us: "3", eu: "35", group: "Kids", length: 220, grading: "+8 mm per size", status: "Active" },
+];
+const blank = (): Item => ({ id: "", uk: "", us: "", eu: "", group: "Adult", length: 0, grading: "", status: "Active" });
+const initials = (s: string) => s.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+const inp = "h-11 rounded-xl";
+
+export default function SizeMasterPage() {
+  const [rows, setRows] = useState<Item[]>(seed);
+  const [q, setQ] = useState("");
+  const [status, setStatus] = useState("all");
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState<Item>(blank());
+
+  const filtered = useMemo(
+    () => rows.filter((r) => (status === "all" || r.status === status) && Object.values(r).join(" ").toLowerCase().includes(q.toLowerCase())),
+    [rows, q, status]
+  );
+  const set = <K extends keyof Item>(k: K, v: Item[K]) => setForm((f) => ({ ...f, [k]: v }));
+  const openNew = () => { setForm(blank()); setOpen(true); };
+  const openEdit = (r: Item) => { setForm({ ...r }); setOpen(true); };
+  const remove = () => { setRows((r) => r.filter((x) => x.id !== form.id)); setOpen(false); };
+  const save = () => {
+    if (!String(form.uk).trim()) return;
+    setRows((r) => form.id ? r.map((x) => (x.id === form.id ? form : x)) : [...r, { ...form, id: `SZ-${String(r.length + 1).padStart(3, "0")}` }]);
+    setOpen(false);
+  };
+
+  const stats = [
+    { icon: Ruler, label: "Total sizes", value: rows.length },
+    { icon: Users, label: "Adult sizes", value: rows.filter((r) => r.group === "Adult").length },
+    { icon: Footprints, label: "Kids sizes", value: rows.filter((r) => r.group === "Kids").length },
+  ];
+
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans">
+      <header className="relative overflow-hidden bg-[#0b0b14] px-6 pb-24 pt-3 text-white md:px-10">
+        <div className="pointer-events-none absolute -left-24 -top-24 h-96 w-96 rounded-full bg-indigo-600/30 blur-3xl" />
+        <div className="relative mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4">
+          <div>
+            {/* <p className="text-sm font-semibold">Shoe<span className="text-indigo-400">Flow</span></p> */}
+            <h1 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Size master</h1>
+            <p className="mt-1 max-w-md text-sm text-slate-400">UK, US and EU sizes for kids and adults, with size conversion and grading.</p>
+          </div>
+          <Button onClick={openNew} className="h-11 rounded-xl bg-indigo-500 px-5 font-semibold text-white hover:bg-indigo-400"><Plus className="mr-2 h-4 w-4" /> Add size</Button>
+        </div>
+      </header>
+
+      <main className="relative mx-auto -mt-18 max-w-8xl space-y-5 px-6 pb-12 md:px-10">
+        <div className="grid gap-4 sm:grid-cols-3">
+          {stats.map(({ icon: Icon, label, value }) => (
+            <Card key={label} className="flex-row items-center gap-4 rounded-2xl border-slate-200 bg-white p-5 shadow-lg shadow-slate-900/5">
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-indigo-50 text-indigo-600"><Icon className="h-5 w-5" /></div>
+              <div><p className="text-2xl font-bold text-slate-900">{value}</p><p className="text-sm text-slate-500">{label}</p></div>
+            </Card>
+          ))}
+        </div>
+
+        <Card className="gap-0 overflow-hidden rounded-2xl border-slate-200 bg-white p-0 shadow-lg shadow-slate-900/5">
+          <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 p-4">
+            <div className="relative min-w-[220px] flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by UK, US or EU size" className={`${inp} border-slate-200 bg-slate-50 pl-10`} />
+            </div>
+            <Select value={status} onValueChange={setStatus}>
+              <SelectTrigger className={`${inp} w-40 border-slate-200 bg-slate-50`}><SelectValue /></SelectTrigger>
+              <SelectContent><SelectItem value="all">All statuses</SelectItem><SelectItem value="Active">Active</SelectItem><SelectItem value="Inactive">Inactive</SelectItem></SelectContent>
+            </Select>
+          </div>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-slate-50/70 hover:bg-slate-50/70">
+                  {["Size", "US", "EU", "Foot length", "Grading", "Status"].map((h, i) => <TableHead key={h} className={i === 0 ? "pl-5" : ""}>{h}</TableHead>)}
+                  <TableHead className="w-12" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.map((r) => (
+                  <TableRow key={r.id} className="cursor-pointer" onClick={() => openEdit(r)}>
+                    <TableCell className="py-4 pl-5">
+                      <div className="flex items-center gap-3">
+                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#111827] text-xs font-semibold text-white">{r.uk}</div>
+                        <div><p className="font-semibold text-slate-900">UK {r.uk}</p><p className="text-xs text-slate-500">{r.group}</p></div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-slate-600">{r.us}</TableCell>
+                    <TableCell className="text-slate-600">{r.eu}</TableCell>
+                    <TableCell className="text-slate-600">{r.length} mm</TableCell>
+                    <TableCell className="text-slate-600">{r.grading}</TableCell>
+                    <TableCell><Badge className={r.status === "Active" ? "rounded-full bg-emerald-50 text-emerald-700 hover:bg-emerald-50" : "rounded-full bg-slate-100 text-slate-600 hover:bg-slate-100"}>{r.status}</Badge></TableCell>
+                    <TableCell><Pencil className="h-4 w-4 text-slate-400" /></TableCell>
+                  </TableRow>
+                ))}
+                {filtered.length === 0 && <TableRow><TableCell colSpan={7} className="py-14 text-center text-slate-500">No sizes found.</TableCell></TableRow>}
+              </TableBody>
+            </Table>
+          </div>
+        </Card>
+      </main>
+
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent className="flex w-full flex-col gap-0 p-0 font-sans !max-w-2xl">
+          <SheetHeader className="border-b border-slate-100 p-6">
+            <SheetTitle className="text-xl font-bold">{form.id ? "Edit size" : "New size"}</SheetTitle>
+            <SheetDescription>{form.id ? `${form.id} · ${form.uk}` : "Fill in the details, then save."}</SheetDescription>
+          </SheetHeader>
+          <Tabs defaultValue="a" className="flex-1 overflow-y-auto p-6">
+            <TabsList className="grid w-full grid-cols-2 rounded-xl bg-slate-100">
+              <TabsTrigger value="a">Conversion</TabsTrigger>
+              <TabsTrigger value="b">Measurement</TabsTrigger>
+            </TabsList>
+            <TabsContent value="a" className="mt-5 space-y-4">
+              <Pick label="Age group" value={form.group} onChange={(v) => set("group", v as Item["group"])} options={["Kids", "Adult"]} />
+              <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="UK size"><Input className={inp} value={form.uk} onChange={(e) => set("uk", e.target.value)} /></Field>
+              <Field label="US size"><Input className={inp} value={form.us} onChange={(e) => set("us", e.target.value)} /></Field>
+              </div>
+              <Field label="EU size"><Input className={inp} value={form.eu} onChange={(e) => set("eu", e.target.value)} /></Field>
+            </TabsContent>
+            <TabsContent value="b" className="mt-5 space-y-4">
+              <Field label="Foot length (mm)"><Input type="number" className={inp} value={form.length} onChange={(e) => set("length", +e.target.value)} /></Field>
+              <Field label="Grading step"><Input className={inp} value={form.grading} onChange={(e) => set("grading", e.target.value)} placeholder="+8.5 mm per size" /></Field>
+              <Pick label="Status" value={form.status} onChange={(v) => set("status", v as Item["status"])} options={["Active", "Inactive"]} />
+            </TabsContent>
+          </Tabs>
+          <SheetFooter className="flex-row justify-between gap-2 border-t border-slate-100 p-4">
+            {form.id ? <Button variant="ghost" onClick={remove} className="h-11 rounded-xl text-red-600 hover:bg-red-50 hover:text-red-700">Delete</Button> : <span />}
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setOpen(false)} className="h-11 rounded-xl">Cancel</Button>
+              <Button onClick={save} className="h-11 rounded-xl bg-[#111827] px-6 font-semibold text-white hover:bg-[#1f2937]">Save size</Button>
+            </div>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return <div className="space-y-1.5"><Label className="text-sm font-medium text-slate-700">{label}</Label>{children}</div>;
+}
+function Pick({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: string[] }) {
+  return (
+    <Field label={label}>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className={`${inp} w-full`}><SelectValue /></SelectTrigger>
+        <SelectContent>{options.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+      </Select>
+    </Field>
+  );
+}
