@@ -74,7 +74,7 @@ export default function DashboardPage() {
   const weekTotal = PAIRS.reduce((a, b) => a + b, 0);
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-6 font-sans text-slate-900 md:p-8">
+    <div className="mx-auto space-y-6 p-6 font-sans text-slate-900 md:p-8">
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>

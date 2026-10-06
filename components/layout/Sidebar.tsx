@@ -159,7 +159,7 @@ export default function Sidebar() {
 
   const row =
     "group relative flex items-center gap-3 h-10 rounded-lg px-3 text-sm font-medium " +
-    "transition-colors outline-none focus-visible:ring-2 focus-visible:ring-orange-400";
+    "transition-colors outline-none focus-visible:ring-2 focus-visible:ring-indigo-400";
 
   const renderBadge = (badge?: Badge) =>
     badge && !collapsed ? (
@@ -189,10 +189,10 @@ export default function Sidebar() {
           onMouseLeave={hideTip}
           onFocus={(e) => showTip(e, item.label)}
           onBlur={hideTip}
-          className={`${row} ${active ? "bg-orange-50 text-slate-900 font-semibold" : "text-slate-800 hover:bg-slate-100 hover:text-slate-900"}`}
+          className={`${row} ${active ? "bg-[#0b0b14] text-white font-semibold" : "text-slate-800 hover:bg-slate-100 hover:text-slate-900"}`}
         >
-          {active && <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r bg-orange-500" />}
-          <Icon size={19} className={`shrink-0 ${active ? "text-orange-500" : "text-slate-500 group-hover:text-slate-700"}`} />
+          {active && <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r bg-indigo-400" />}
+          <Icon size={19} className={`shrink-0 ${active ? "text-indigo-300" : "text-slate-500 group-hover:text-slate-700"}`} />
           {!collapsed && <span className="truncate">{item.label}</span>}
           {renderBadge(item.badge)}
           {renderDot(item.badge)}
@@ -225,8 +225,8 @@ export default function Sidebar() {
             open ? "bg-slate-50" : ""
           }`}
         >
-          {groupActive && <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r bg-orange-500" />}
-          <Icon size={19} className={`shrink-0 ${groupActive ? "text-orange-500" : "text-slate-500 group-hover:text-slate-700"}`} />
+          {groupActive && <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r bg-indigo-400" />}
+          <Icon size={19} className={`shrink-0 ${groupActive ? "text-indigo-600" : "text-slate-500 group-hover:text-slate-700"}`} />
           {!collapsed && (
             <>
               <span className="flex-1 text-left truncate">{item.label}</span>
@@ -247,9 +247,9 @@ export default function Sidebar() {
                     tabIndex={open ? 0 : -1}
                     aria-current={active ? "page" : undefined}
                     className={`flex items-center gap-2.5 min-h-9 px-2.5 py-1.5 rounded-md text-[13.5px] transition-colors
-                      outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${
+                      outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${
                         active
-                          ? "bg-orange-50 text-orange-700 font-semibold"
+                          ? "bg-[#0b0b14] text-white font-semibold"
                           : "text-slate-700 hover:text-slate-900 hover:bg-slate-100"
                       }`}
                   >
@@ -284,7 +284,7 @@ export default function Sidebar() {
               aria-label="Expand sidebar"
               onMouseEnter={(e) => showTip(e, "Expand")}
               onMouseLeave={hideTip}
-              className="group relative grid place-items-center w-9 h-9 rounded-lg bg-orange-500 text-white outline-none focus-visible:ring-2 focus-visible:ring-orange-300"
+              className="group relative grid place-items-center w-9 h-9 rounded-lg bg-[#0b0b14] text-white outline-none focus-visible:ring-2 focus-visible:ring-indigo-300"
             >
               <Footprints size={18} className="group-hover:opacity-0 transition-opacity" />
               <PanelLeftOpen size={18} className="absolute opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -292,7 +292,7 @@ export default function Sidebar() {
           ) : (
             <>
               <div className="flex items-center gap-2.5 min-w-0">
-                <span className="grid place-items-center w-9 h-9 shrink-0 rounded-lg bg-orange-500 text-white">
+                <span className="grid place-items-center w-9 h-9 shrink-0 rounded-lg bg-[#0b0b14] text-white">
                   <Footprints size={18} />
                 </span>
                 <span className="text-lg font-bold tracking-tight text-slate-900 truncate">{BRAND}</span>
@@ -300,7 +300,7 @@ export default function Sidebar() {
               <button
                 onClick={() => updateCollapsed(true)}
                 aria-label="Collapse sidebar"
-                className="grid place-items-center w-8 h-8 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
+                className="grid place-items-center w-8 h-8 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 <PanelLeftClose size={18} />
               </button>
@@ -337,7 +337,7 @@ export default function Sidebar() {
                 aria-label="Log out"
                 onMouseEnter={(e) => showTip(e, "Log out")}
                 onMouseLeave={hideTip}
-                className="grid place-items-center w-9 h-9 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
+                className="grid place-items-center w-9 h-9 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 <LogOut size={17} />
               </button>
@@ -351,7 +351,7 @@ export default function Sidebar() {
               </div>
               <button
                 aria-label="Log out"
-                className="grid place-items-center w-8 h-8 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
+                className="grid place-items-center w-8 h-8 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 <LogOut size={17} />
               </button>

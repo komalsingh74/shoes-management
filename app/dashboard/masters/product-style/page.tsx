@@ -52,19 +52,30 @@ export default function ProductStyleMasterPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="relative overflow-hidden bg-[#0b0b14] px-6 pb-24 pt-3 text-white md:px-10">
-        <div className="pointer-events-none absolute -left-24 -top-24 h-96 w-96 rounded-full bg-indigo-600/30 blur-3xl" />
-        <div className="relative mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4">
+      <Card className="p-4">
+        <header className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            {/* <p className="text-sm font-semibold">Shoe<span className="text-indigo-400">Flow</span></p> */}
-            <h1 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">Product / Style master</h1>
-            <p className="mt-1 max-w-md text-sm text-slate-400">Shoe style, model, gender, category, season, construction and brand.</p>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+              Product / Style master
+            </h1>
+            <p className="mt-0 text-sm text-slate-500">
+              Shoe style, model, gender, category, season, construction and brand.
+            </p>
           </div>
-          <Button onClick={openNew} className="h-11 rounded-xl bg-indigo-500 px-5 font-semibold text-white hover:bg-indigo-400"><Plus className="mr-2 h-4 w-4" /> Add style</Button>
-        </div>
-      </header>
+          <Button
+            onClick={openNew}
+            className="group relative h-11 overflow-hidden rounded-xl bg-[#0b0b14] px-5 font-semibold text-white shadow-lg shadow-indigo-900/20 ring-1 ring-white/10 hover:bg-[#12121f]"
+          >
+            <span className="pointer-events-none absolute -left-6 -top-8 h-20 w-20 rounded-full bg-indigo-600/50 blur-2xl transition-opacity group-hover:opacity-80" />
+            <span className="relative flex items-center">
+              <Plus className="mr-2 h-4 w-4 text-indigo-300" />
+              Add style
+            </span>
+          </Button>
+        </header>
+      </Card>
 
-      <main className="relative mx-auto -mt-18 max-w-8xl space-y-5 px-6 pb-10 md:px-10">
+      <main className="mx-auto space-y-3 px-0 py-4">
         <div className="grid gap-4 sm:grid-cols-3">
           {stats.map(({ icon: Icon, label, value }) => (
             <Card key={label} className="flex-row items-center gap-4 rounded-2xl border-slate-200 bg-white p-5 shadow-lg shadow-slate-900/5">
