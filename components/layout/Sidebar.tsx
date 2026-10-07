@@ -140,9 +140,9 @@ export default function Sidebar() {
   };
 
   const allItems = SECTIONS.flatMap((s) => s.items);
-  const [openGroup, setOpenGroup] = useState<string | null>(
-    allItems.find((m) => m.children?.some((c) => isActive(c.href)))?.label ?? "Sales"
-  );
+const [openGroup, setOpenGroup] = useState<string | null>(
+  allItems.find((m) => m.children?.some((c) => isActive(c.href)))?.label ?? null
+);
 
   // Saved choice yaad rakho; pehli baar chhoti screen par apne aap collapse
   useEffect(() => {
