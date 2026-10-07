@@ -26,6 +26,10 @@ import {
   Ruler,
   Palette,
   Layers,
+   FileText,      // Product Specification
+  Workflow,      // Routing
+  ClipboardCheck, // Quality Specification
+  PackageCheck,  // Packing Specification
   type LucideIcon,
 } from "lucide-react";
 
@@ -68,6 +72,17 @@ const SECTIONS: Section[] = [
           { label: "Tax / Commercial Master", href: "/dashboard/masters/tax-commercial", icon: BadgePercent },
           { label: "Pricing / Costing Master", href: "/dashboard/masters/pricing-costing", icon: BadgePercent },
           { label: "Approval / Workflow Master", href: "/dashboard/masters/approval-workflow", icon: ShieldCheck },
+        ],
+      },
+            {
+        label: "Product Engineering",
+        icon: Workflow,
+        children: [
+          { label: "Product Specification", href: "/dashboard/product-engineering/product-specification", icon: FileText },
+          { label: "BOM", href: "/dashboard/product-engineering/bom", icon: Boxes },
+          { label: "Routing", href: "/dashboard/product-engineering/routing", icon: Workflow },
+          { label: "Quality Specification", href: "/dashboard/product-engineering/quality-specification", icon: ClipboardCheck },
+          { label: "Packing Specification", href: "/dashboard/product-engineering/packing-specification", icon: PackageCheck },
         ],
       },
       {
