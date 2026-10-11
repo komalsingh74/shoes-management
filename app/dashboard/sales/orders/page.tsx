@@ -396,6 +396,8 @@ export default function OrderModulePage() {
 
   // Wizard State
   const [wizardStep, setWizardStep] = useState(0);
+  const [selectedStyle, setSelectedStyle] = useState(Object.keys(STYLES)[0]);
+  const [selectedColor, setSelectedColor] = useState(COLORS[0]);
   const [wizardData, setWizardData] = useState<Partial<Order>>({
     customer: "",
     customerPo: "",
@@ -1200,7 +1202,7 @@ export default function OrderModulePage() {
         <div className="flex gap-4 items-end">
           <div className="flex-1 space-y-1.5">
             <Label className="text-sm font-medium text-slate-700">Style</Label>
-            <Select id="wiz-style" defaultValue={Object.keys(STYLES)[0]}>
+            <Select value={selectedStyle} onValueChange={setSelectedStyle}>
               <SelectTrigger className="h-11 rounded-xl border-slate-200">
                 <SelectValue />
               </SelectTrigger>
@@ -1215,7 +1217,7 @@ export default function OrderModulePage() {
           </div>
           <div className="flex-1 space-y-1.5">
             <Label className="text-sm font-medium text-slate-700">Colour</Label>
-            <Select id="wiz-color" defaultValue={COLORS[0]}>
+            <Select value={selectedColor} onValueChange={setSelectedColor}>
               <SelectTrigger className="h-11 rounded-xl border-slate-200">
                 <SelectValue />
               </SelectTrigger>
@@ -1230,11 +1232,7 @@ export default function OrderModulePage() {
           </div>
           <Button
             onClick={() => {
-              const s = (document.getElementById("wiz-style") as HTMLSelectElement)
-                ?.value || Object.keys(STYLES)[0];
-              const c = (document.getElementById("wiz-color") as HTMLSelectElement)
-                ?.value || COLORS[0];
-              addLine(s, c);
+              addLine(selectedStyle, selectedColor);
             }}
             className="h-11 rounded-xl bg-[#111827] px-6 font-semibold text-white hover:bg-[#1f2937]"
           >
