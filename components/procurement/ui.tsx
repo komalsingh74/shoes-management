@@ -109,16 +109,21 @@ export function Notice({ tone = "gray", title, children }: { tone?: Tone; title?
   );
 }
 
-export function Card({ title, flush = false, children }: { title?: string; flush?: boolean; children: ReactNode }) {
+export function Card({ title, flush = false, action, className, children }: { title?: string; flush?: boolean; action?: ReactNode; className?: string; children: ReactNode }) {
   return (
-    <div className={cn("rounded-xl border border-slate-200 bg-white shadow-sm", flush ? "overflow-hidden" : "p-4") }>
-      {title && <div className="border-b border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800">{title}</div>}
+    <div className={cn("rounded-xl border border-slate-200 bg-white shadow-sm", flush ? "overflow-hidden" : "p-4", className)}>
+      {(title || action) && (
+        <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
+          {title && <div className="text-sm font-semibold text-slate-800">{title}</div>}
+          {action}
+        </div>
+      )}
       <div className={flush ? "" : "mt-4"}>{children}</div>
     </div>
   );
 }
 
-export function Field({ label, required, children }: { label: string; required?: boolean; children: ReactNode }) {
+export function Field({ label, required, hint, error, children }: { label: string; required?: boolean; hint?: string; error?: string; children: ReactNode }) {
   return (
     <label className="block text-sm text-slate-700">
       <span className="mb-1.5 flex items-center gap-1 font-medium text-slate-600">
@@ -126,6 +131,8 @@ export function Field({ label, required, children }: { label: string; required?:
         {required && <span className="text-rose-500">*</span>}
       </span>
       {children}
+      {hint && <span className="mt-1 block text-xs text-slate-500">{hint}</span>}
+      {error && <span className="mt-1 block text-xs text-rose-600">{error}</span>}
     </label>
   );
 }
@@ -165,7 +172,7 @@ export function Stepper({ steps, current }: { steps: string[]; current: number }
   );
 }
 
-export function Tabs({ tabs, value, onChange }: { tabs: readonly string[]; value: string; onChange: (v: string) => void }) {
+export function Tabs<T extends string>({ tabs, value, onChange }: { tabs: readonly T[]; value: T; onChange: (v: T) => void }) {
   return (
     <div className="flex flex-wrap gap-2 rounded-xl border border-slate-200 bg-slate-50 p-1">
       {tabs.map((tab) => (

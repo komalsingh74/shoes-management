@@ -6,6 +6,7 @@ export interface Material {
   uom: string;
   gst: number;
   rate: number;
+  stock?: number;
 }
 
 export interface SupplierOption {
