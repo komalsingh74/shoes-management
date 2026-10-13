@@ -1,22 +1,36 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 import {
   Eye,
   EyeOff,
   LockKeyhole,
-  Mail,
+  User,
   ArrowRight,
   Package,
   ShoppingCart,
   BarChart3,
   Boxes,
 } from "lucide-react";
-import Link from "next/link";
 
-/* ----------------------------------------------------------------
-   Brand shoe icon (custom SVG — no emoji, feels more premium)
------------------------------------------------------------------ */
+import api from "@/lib/api";
+import { showSuccess, showError } from "@/lib/toast";
+
+/* ---------- API types ---------- */
+type LoginResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    user_id: number;
+    username: string;
+    access: string;
+    refresh: string;
+  };
+};
+
+/* ---------- Brand shoe icon ---------- */
 function ShoeMark({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -40,9 +54,6 @@ function ShoeMark({ className = "" }: { className?: string }) {
   );
 }
 
-/* ----------------------------------------------------------------
-   Feature list for the branding panel
------------------------------------------------------------------ */
 const features = [
   { icon: Boxes, label: "Inventory tracking" },
   { icon: ShoppingCart, label: "Order management" },
@@ -51,25 +62,68 @@ const features = [
 ];
 
 export default function LoginForm() {
+  const router = useRouter();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [remember, setRemember] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (loading) return;
+
+    const trimmedUsername = username.trim();
+    if (!trimmedUsername || !password) {
+      showError("Please enter your username and password.");
+      return;
+    }
+
     setLoading(true);
 
-    // TODO: wire up real auth
-    // await loginUser({ email, password, remember });
+    try {
+      const { data: res } = await api.post<LoginResponse>("/auth/login/", {
+        username: trimmedUsername,
+        password,
+      });
 
-    setTimeout(() => setLoading(false), 1200);
+      if (!res.success) {
+        showError(res.message || "Login failed.");
+        return;
+      }
+
+      const { access, refresh, user_id, username: uname } = res.data;
+
+      // "token" is the key your axios interceptor reads
+      localStorage.setItem("token", access);
+      localStorage.setItem("refresh_token", refresh);
+      localStorage.setItem("user", JSON.stringify({ user_id, username: uname }));
+      localStorage.setItem("remember", String(remember));
+
+      showSuccess(res.message || "Login successful.");
+      router.replace("/dashboard");
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string; detail?: string }>;
+
+      // The interceptor skips 401 on "/", so handle it here.
+      // All other errors are already toasted by the interceptor.
+      if (error.response?.status === 401) {
+        showError(
+          error.response.data?.message ||
+            error.response.data?.detail ||
+            "Invalid username or password."
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#f6f7fb] flex items-stretch justify-center">
       {/* ============================= LEFT: BRAND PANEL ============================= */}
       <aside className="hidden lg:flex lg:w-[46%] xl:w-[42%] relative overflow-hidden bg-[#0b0b0d] text-white">
-        {/* Ambient gradient blobs */}
         <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-indigo-600/30 blur-3xl" />
         <div className="absolute bottom-0 -right-20 w-80 h-80 rounded-full bg-indigo-500/20 blur-3xl" />
         <div
@@ -82,7 +136,6 @@ export default function LoginForm() {
         />
 
         <div className="relative z-10 flex flex-col justify-between w-full p-12 xl:p-16">
-          {/* Brand */}
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-2xl bg-white text-[#0b0b0d] flex items-center justify-center shadow-lg">
               <ShoeMark className="w-6 h-6" />
@@ -92,20 +145,17 @@ export default function LoginForm() {
             </span>
           </div>
 
-          {/* Headline */}
           <div className="max-w-md">
             <h2 className="text-4xl xl:text-5xl font-bold leading-[1.1] tracking-tight">
               Run your footwear
               <br />
-              business{" "}
-              <span className="text-indigo-400">effortlessly.</span>
+              business <span className="text-indigo-400">effortlessly.</span>
             </h2>
             <p className="mt-5 text-gray-400 text-[15px] leading-relaxed">
               The all-in-one platform to manage inventory, orders, products and
               sales — built for modern shoe retailers.
             </p>
 
-            {/* Feature chips */}
             <ul className="mt-10 grid grid-cols-2 gap-3">
               {features.map(({ icon: Icon, label }) => (
                 <li
@@ -121,7 +171,6 @@ export default function LoginForm() {
             </ul>
           </div>
 
-          {/* Footer note */}
           <p className="text-xs text-gray-500">
             © {new Date().getFullYear()} ShoeFlow. Crafted for shoe sellers.
           </p>
@@ -131,7 +180,6 @@ export default function LoginForm() {
       {/* ============================= RIGHT: FORM PANEL ============================= */}
       <main className="flex-1 flex items-center justify-center px-5 sm:px-8 py-10">
         <div className="w-full max-w-[440px]">
-          {/* Mobile brand (shown only on small screens) */}
           <div className="lg:hidden text-center mb-8">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#0b0b0d] text-white shadow-lg mb-4">
               <ShoeMark className="w-7 h-7" />
@@ -144,7 +192,6 @@ export default function LoginForm() {
             </p>
           </div>
 
-          {/* Card */}
           <div className="bg-white border border-gray-100 rounded-3xl shadow-xl shadow-gray-200/60 p-7 sm:p-10">
             <div className="mb-8">
               <h2 className="text-[26px] font-semibold text-gray-900 tracking-tight">
@@ -156,27 +203,30 @@ export default function LoginForm() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Email */}
+              {/* Username */}
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="username"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Email address
+                  Username
                 </label>
                 <div className="relative group">
-                  <Mail
+                  <User
                     size={19}
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-600 transition-colors"
                   />
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    autoComplete="email"
+                    id="username"
+                    name="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your username"
+                    autoComplete="username"
+                    disabled={loading}
                     required
-                    className="w-full h-12 rounded-xl border border-gray-200 bg-gray-50 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+                    className="w-full h-12 rounded-xl border border-gray-200 bg-gray-50 pl-11 pr-4 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 disabled:opacity-70"
                   />
                 </div>
               </div>
@@ -206,10 +256,13 @@ export default function LoginForm() {
                     id="password"
                     name="password"
                     type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
                     autoComplete="current-password"
+                    disabled={loading}
                     required
-                    className="w-full h-12 rounded-xl border border-gray-200 bg-gray-50 pl-11 pr-12 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+                    className="w-full h-12 rounded-xl border border-gray-200 bg-gray-50 pl-11 pr-12 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 disabled:opacity-70"
                   />
                   <button
                     type="button"
@@ -222,29 +275,20 @@ export default function LoginForm() {
                 </div>
               </div>
 
-              {/* Remember + dashboard link */}
-              <div className="flex items-center justify-between gap-3 flex-wrap">
-                <label
-                  htmlFor="remember"
-                  className="flex items-center gap-2 cursor-pointer select-none"
-                >
-                  <input
-                    id="remember"
-                    type="checkbox"
-                    checked={remember}
-                    onChange={(e) => setRemember(e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 accent-indigo-600"
-                  />
-                  <span className="text-sm text-gray-600">Remember me</span>
-                </label>
-
-                <Link
-                  href="/dashboard"
-                  className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
-                >
-                  Go to Dashboard →
-                </Link>
-              </div>
+              {/* Remember me */}
+              <label
+                htmlFor="remember"
+                className="flex items-center gap-2 cursor-pointer select-none w-fit"
+              >
+                <input
+                  id="remember"
+                  type="checkbox"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 accent-indigo-600"
+                />
+                <span className="text-sm text-gray-600">Remember me</span>
+              </label>
 
               {/* Submit */}
               <button
@@ -269,7 +313,6 @@ export default function LoginForm() {
               </button>
             </form>
 
-            {/* Divider */}
             <div className="relative my-7">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-100" />
@@ -281,13 +324,11 @@ export default function LoginForm() {
               </div>
             </div>
 
-            {/* Footer */}
             <p className="text-center text-xs text-gray-400">
               © {new Date().getFullYear()} ShoeFlow. All rights reserved.
             </p>
           </div>
 
-          {/* Bottom tagline */}
           <p className="text-center text-xs text-gray-400 mt-6">
             Inventory • Orders • Products • Sales
           </p>

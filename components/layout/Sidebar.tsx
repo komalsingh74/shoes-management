@@ -116,7 +116,20 @@ const SECTIONS: Section[] = [
     title: "Supply",
     items: [
       { label: "Inventory", icon: Boxes, href: "/dashboard/inventory", badge: { value: "3", tone: "amber" } },
-      { label: "Purchase", icon: ShoppingBag, href: "/dashboard/purchase" },
+      {
+        label: "Purchase & Procurement",
+        icon: ShoppingBag,
+        children: [
+          { label: "Supplier Management", href: "/dashboard/masters/supplier-vendor", icon: Users },
+          { label: "Purchase Requisitions", href: "/dashboard/purchase/purchase-requisitions", icon: FilePlus2 },
+          { label: "Supplier Quotations & Comparison", href: "/dashboard/purchase/supplier-quotations", icon: FileText },
+          { label: "Purchase Orders", href: "/dashboard/purchase/purchase-orders", icon: ListChecks },
+          { label: "Goods Receipt Notes (GRN)", href: "/dashboard/purchase/goods-receipt-notes", icon: PackageCheck },
+          { label: "Supplier Invoices", href: "/dashboard/purchase/supplier-invoices", icon: ClipboardCheck },
+          { label: "Supplier Payments", href: "/dashboard/purchase/supplier-payments", icon: BadgePercent },
+          { label: "Purchase Reports", href: "/dashboard/purchase/purchase-reports", icon: FileOutput },
+        ],
+      },
       { label: "Store", icon: Store, href: "/dashboard/store" },
     ],
   },
@@ -155,6 +168,16 @@ const [openGroup, setOpenGroup] = useState<string | null>(
       /* storage available nahi, ignore */
     }
   }, []);
+
+
+  const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("remember");
+
+  window.location.replace("/");
+};
 
   const updateCollapsed = (value: boolean) => {
     setCollapsed(value);
@@ -368,6 +391,7 @@ const [openGroup, setOpenGroup] = useState<string | null>(
               <button
                 aria-label="Log out"
                 className="grid place-items-center w-8 h-8 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                onClick={handleLogout}
               >
                 <LogOut size={17} />
               </button>
