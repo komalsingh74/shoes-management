@@ -102,12 +102,12 @@ export default function SupplierInvoicesPage() {
   const pending = invoices.filter((i) => ["Matched", "Variance", "Blocked"].includes(i.status));
 
   return (
-    <div className="mx-auto max-w-7xl p-6">
+    <div className="mx-auto max-w-none">
       <PageHeader title="Supplier Invoices" subtitle="Record supplier bills and match each one to the PO price and the quantity accepted at receiving before it can be approved for payment."
         actions={<Button variant="primary" onClick={() => setAdding(true)}><Plus size={16} /> Record invoice</Button>} />
       {toast && <div className="mb-4"><Notice tone="green">{toast}</Notice></div>}
 
-      <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-5">
+      <div className="mb-2 grid grid-cols-2 gap-3 md:grid-cols-5">
         <Kpi label="Invoices" value={invoices.length} />
         <Kpi label="Awaiting approval" value={pending.length} />
         <Kpi label="With variances" value={invoices.filter((i) => i.status === "Variance").length} tone="alert" />
@@ -143,7 +143,7 @@ export default function SupplierInvoicesPage() {
           const v = matchLines(view.lines);
           const g = gst(view);
           return (
-            <div className="space-y-5">
+            <div className="space-y-2">
               <Badge tone={TONE[view.status]}>{view.status}</Badge>
               <TableWrap>
                 <thead className="bg-slate-50"><tr>
@@ -192,7 +192,7 @@ export default function SupplierInvoicesPage() {
 
       {/* Entry */}
       <Drawer open={adding} onClose={() => setAdding(false)} title="Record supplier invoice" wide>
-        <div className="space-y-5">
+        <div className="space-y-2">
           <div className="grid gap-3 sm:grid-cols-3">
             <Field label="Supplier" required>
               <select className={inputCls} value={sup} onChange={(e) => { setSup(e.target.value); setQtys({}); setPrices({}); }}>

@@ -98,7 +98,7 @@ export default function QuotationsPage() {
   if (picksNonLowest && justification.trim().length < 10) awardErrors.push("Add a justification for not selecting the lowest valid offer.");
 
   return (
-    <div className="mx-auto max-w-7xl p-6">
+    <div className="mx-auto max-w-none ">
       <PageHeader
         title="Supplier Quotations & Comparison"
         subtitle="Collect supplier offers, compare them on a common basis, and record an approved award. Highlights show information only — nothing is awarded automatically."
@@ -108,7 +108,7 @@ export default function QuotationsPage() {
 
       {/* ---------------- Register ---------------- */}
       {tab === "RFQ register" && (
-        <div className="mt-5 space-y-5">
+        <div className="mt-2 space-y-2">
           <div className="grid grid-cols-2 gap-3 md:grid-cols-6">
             <Kpi label="Open RFQs" value={RFQS.filter((r) => ["Issued", "Responses pending"].includes(r.status)).length} />
             <Kpi label="Awaiting quotations" value={RFQS.filter((r) => r.received < r.invited).length} />
@@ -149,7 +149,7 @@ export default function QuotationsPage() {
 
       {/* ---------------- Comparison ---------------- */}
       {tab === "Comparison" && (
-        <div className="mt-5 space-y-5">
+        <div className="mt-2 space-y-2">
           <Card>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -215,7 +215,7 @@ export default function QuotationsPage() {
 
       {/* ---------------- Award ---------------- */}
       {tab === "Award" && (
-        <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_320px]">
+        <div className="mt-2 grid gap-5 lg:grid-cols-[1fr_320px]">
           <div className="space-y-5">
             {submitted ? (
               <Notice tone="green" title="Award sent for approval">

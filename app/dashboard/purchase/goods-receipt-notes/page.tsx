@@ -101,7 +101,7 @@ export default function GRNPage() {
   /* ================= CREATE ================= */
   if (mode === "create")
     return (
-      <div className="mx-auto max-w-6xl p-6">
+      <div className="mx-auto max-w-none ">
         <PageHeader title="Receive materials" subtitle="Record what physically arrived. This does not make stock usable — inspection and posting come next."
           actions={<Button onClick={() => setMode("list")}>Back to GRN list</Button>} />
         <div className="space-y-5">
@@ -169,12 +169,12 @@ export default function GRNPage() {
   const insp = grns.find((g) => g.no === inspecting) ?? null;
 
   return (
-    <div className="mx-auto max-w-7xl p-6">
+    <div className="mx-auto max-w-none ">
       <PageHeader title="Goods Receipt Notes (GRN)" subtitle="Receiving, inspection and posting are separate steps. Received quantity is never assumed to be accepted quantity."
         actions={<Button variant="primary" onClick={() => setMode("create")}><Plus size={16} /> Receive against PO</Button>} />
       {toast && <div className="mb-4"><Notice tone="green">{toast}</Notice></div>}
 
-      <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-6">
+      <div className="mb-2 grid grid-cols-2 gap-3 md:grid-cols-6">
         <Kpi label="Receipts today" value={grns.filter((g) => g.date === BUSINESS_DATE).length} />
         <Kpi label="Pending inspection" value={grns.filter((g) => g.status === "Awaiting inspection").length} />
         <Kpi label="Awaiting posting" value={grns.filter((g) => g.status === "Awaiting posting").length} />

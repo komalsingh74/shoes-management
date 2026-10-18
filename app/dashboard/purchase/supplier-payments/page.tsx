@@ -88,12 +88,12 @@ export default function SupplierPaymentsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl p-6">
+    <div className="mx-auto max-w-none">
       <PageHeader title="Supplier Payments" subtitle="Pay approved invoices on or before their due dates. Only invoices that passed matching appear here."
         actions={<Button variant="primary" disabled={chosen.length === 0} onClick={() => setOpen(true)}><Plus size={16} /> Create payment ({chosen.length})</Button>} />
-      {toast && <div className="mb-4"><Notice tone="green">{toast}</Notice></div>}
+      {toast && <div className="mb-2"><Notice tone="green">{toast}</Notice></div>}
 
-      <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="mb-2 grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi label="Total outstanding" value={inr(totalOut)} />
         <Kpi label="Overdue" value={inr(overdue.reduce((s, p) => s + outstanding(p), 0))} hint={`${overdue.length} invoice(s)`} tone="alert" />
         <Kpi label="Due in 7 days" value={inr(dueWeek.reduce((s, p) => s + outstanding(p), 0))} hint={`${dueWeek.length} invoice(s)`} />
@@ -136,7 +136,7 @@ export default function SupplierPaymentsPage() {
         </Card>
       </div>
 
-      <Card title="Payment history" className="mt-5" flush>
+      <Card title="Payment history" className="mt-2" flush>
         <TableWrap>
           <thead className="bg-slate-50"><tr>
             <th className={th}>Payment</th><th className={th}>Date</th><th className={th}>Supplier</th><th className={th}>Method</th><th className={th}>Invoices</th><th className={thR}>TDS</th><th className={thR}>Net paid</th><th className={th}>Status</th>

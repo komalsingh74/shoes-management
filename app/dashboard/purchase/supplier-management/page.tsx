@@ -109,7 +109,7 @@ export default function SupplierManagementPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl p-6">
+    <div className="mx-auto max-w-none p-4 md:p-5">
       <PageHeader
         title="Supplier Management"
         subtitle="Maintain approved vendors, their material categories, commercial terms and delivery or quality history. Only approved, active suppliers can be invited to RFQs or receive POs."

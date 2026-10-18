@@ -171,7 +171,7 @@ export default function PurchaseOrdersPage() {
   /* ================= LIST ================= */
   if (mode === "list")
     return (
-      <div className="mx-auto max-w-7xl p-6">
+      <div className="mx-auto max-w-none">
         <PageHeader
           title="Purchase Orders"
           subtitle="Supplier commitments. One PO covers one supplier and can hold one or many materials, each with its own delivery schedule."
@@ -179,7 +179,7 @@ export default function PurchaseOrdersPage() {
         />
         {toast && <div className="mb-4"><Notice tone="green">{toast}</Notice></div>}
 
-        <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-6">
+        <div className="mb-2 grid grid-cols-2 gap-3 md:grid-cols-6">
           <Kpi label="Total POs" value={orders.filter((o) => o.status !== "Cancelled").length} />
           <Kpi label="Pending approval" value={orders.filter((o) => o.status === "Pending approval").length} />
           <Kpi label="Open POs" value={orders.filter((o) => ["Approved", "Sent", "Partially received"].includes(o.status)).length} />
@@ -241,14 +241,14 @@ export default function PurchaseOrdersPage() {
 
   /* ================= CREATE ================= */
   return (
-    <div className="mx-auto max-w-7xl p-6">
+    <div className="mx-auto max-w-none ">
       <PageHeader
         title="Create purchase order"
         subtitle="Choose one supplier, then add one or many materials. Each material can be delivered in one or more scheduled shipments."
         actions={<Button onClick={() => { setMode("list"); resetForm(); }}>Back to list</Button>}
       />
       <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
-        <div className="space-y-5">
+        <div className="space-y-2">
           <Card title="Order details">
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label="Supplier" required>
@@ -451,7 +451,7 @@ function PODetail({
 
   return (
     <Drawer open onClose={onClose} title={po.no} subtitle={`${sup?.name} · ${po.status}`} wide>
-      <div className="space-y-5">
+      <div className="space-y-2">
         <Tabs tabs={DETAIL_TABS} value={tab} onChange={setTab} />
 
         {tab === "Overview" && (
@@ -490,7 +490,7 @@ function PODetail({
         )}
 
         {tab === "Revisions" && (
-          <div className="space-y-5">
+          <div className="space-y-2">
             {!canRevise && <Notice tone="blue">Revisions apply to approved POs. Draft and pending POs can be edited directly.</Notice>}
             {revisions.map((r) => (
               <Card key={r.rev}>

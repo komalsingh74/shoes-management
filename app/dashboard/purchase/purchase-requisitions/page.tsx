@@ -100,15 +100,15 @@ export default function PurchaseRequisitionsPage() {
   const count = (s: PRStatus) => prs.filter((p) => p.status === s).length;
 
   return (
-    <div className="mx-auto max-w-7xl p-6">
+    <div className="mx-auto max-w-none ">
       <PageHeader
         title="Purchase Requisitions"
         subtitle="Raise and track internal requests for materials. Approved requisitions feed RFQs and purchase orders, and each line tracks how much has already been ordered."
         actions={<Button variant="primary" onClick={() => setCreating(true)}><Plus size={16} /> New requisition</Button>}
       />
-      {toast && <div className="mb-4"><Notice tone="green">{toast}</Notice></div>}
+      {toast && <div className="mb-2"><Notice tone="green">{toast}</Notice></div>}
 
-      <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-5">
+      <div className="mb-2 grid grid-cols-2 gap-3 md:grid-cols-5">
         <Kpi label="Total requisitions" value={prs.length} />
         <Kpi label="Pending approval" value={count("Pending approval")} />
         <Kpi label="Approved, not ordered" value={count("Approved")} hint="Ready for RFQ or PO" />

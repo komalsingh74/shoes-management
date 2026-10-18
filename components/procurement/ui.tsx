@@ -50,23 +50,23 @@ export function inr(value: number | null | undefined) {
   return `₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(value)}`;
 }
 
-export const inputCls = "w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-700 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200 disabled:bg-slate-50 disabled:text-slate-400";
+export const inputCls = "h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-700 outline-none transition focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 disabled:bg-slate-50 disabled:text-slate-400";
 
-export const th = "px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500";
+export const th = "px-4 py-3 text-left text-sm font-medium text-slate-700";
 export const thR = `${th} text-right`;
-export const td = "px-3 py-2 align-top text-sm text-slate-700";
+export const td = "px-4 py-4 align-middle text-sm text-slate-600";
 export const tdR = `${td} text-right tabular-nums`;
 
 export function Button({ variant = "default", className, children, ...props }: { variant?: "default" | "primary" | "ghost"; className?: string; children: ReactNode } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const variants: Record<string, string> = {
     default: "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
-    primary: "border border-blue-600 bg-blue-600 text-white hover:bg-blue-500",
+    primary: "border border-[#151326] bg-[#11111b] text-white shadow-lg shadow-indigo-900/15 hover:bg-[#211d3b]",
     ghost: "border border-transparent bg-slate-100 text-slate-700 hover:bg-slate-200",
   };
   return (
     <button
       {...props}
-      className={cn("inline-flex items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50", variants[variant], className)}
+      className={cn("inline-flex h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50", variants[variant], className)}
     >
       {children}
     </button>
@@ -75,10 +75,10 @@ export function Button({ variant = "default", className, children, ...props }: {
 
 export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: ReactNode }) {
   return (
-    <div className="mb-5 flex flex-col gap-3 border-b border-slate-200 pb-4 md:flex-row md:items-end md:justify-between">
+    <div className="mb-2 flex min-h-[112px] flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">{title}</h1>
-        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">{title}</h1>
+        {subtitle && <p className="mt-1 max-w-4xl text-sm text-slate-500 md:text-base">{subtitle}</p>}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}
     </div>
@@ -87,11 +87,10 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
 
 export function Kpi({ label, value, hint, tone = "blue" }: { label: string; value: ReactNode; hint?: string; tone?: Tone }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
-      <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-slate-500">{label}</div>
-      <div className="mt-2 text-xl font-semibold text-slate-900">{value}</div>
-      {hint && <div className="mt-1 text-[11px] text-slate-500">{hint}</div>}
-      {tone && <div className="mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ring-1 ring-inset bg-slate-100 text-slate-700 ring-slate-200">{tone}</div>}
+    <div className="min-h-[96px] rounded-2xl border border-slate-200 bg-white p-5 shadow-lg shadow-slate-900/5">
+      <div className="text-sm font-medium text-slate-500">{label}</div>
+      <div className="mt-1 text-2xl font-bold tracking-tight text-slate-900">{value}</div>
+      {hint && <div className="mt-1 text-xs text-slate-500">{hint}</div>}
     </div>
   );
 }
@@ -111,10 +110,10 @@ export function Notice({ tone = "gray", title, children }: { tone?: Tone; title?
 
 export function Card({ title, flush = false, action, className, children }: { title?: string; flush?: boolean; action?: ReactNode; className?: string; children: ReactNode }) {
   return (
-    <div className={cn("rounded-xl border border-slate-200 bg-white shadow-sm", flush ? "overflow-hidden" : "p-4", className)}>
+    <div className={cn("rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5", flush ? "overflow-hidden" : "p-5", className)}>
       {(title || action) && (
-        <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
-          {title && <div className="text-sm font-semibold text-slate-800">{title}</div>}
+        <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
+          {title && <div className="text-base font-semibold text-slate-900">{title}</div>}
           {action}
         </div>
       )}

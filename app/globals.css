@@ -128,3 +128,44 @@
     @apply font-sans;
   }
 }
+
+/* Keep page typography slightly more compact and consistent across dashboard modules. */
+.dashboard-content h1 {
+  font-size: 1.375rem;
+  line-height: 1.9rem;
+}
+
+.dashboard-content h2 {
+  font-size: 1.125rem;
+  line-height: 1.6rem;
+}
+
+.dashboard-content [class~="text-xs"] {
+  font-size: 0.6875rem;
+  line-height: 1rem;
+}
+
+.dashboard-content [class~="text-sm"] {
+  font-size: 0.8125rem;
+  line-height: 1.2rem;
+}
+
+.dashboard-content [class~="text-base"] {
+  font-size: 0.875rem;
+  line-height: 1.3rem;
+}
+
+.dashboard-content [class~="text-lg"] {
+  font-size: 1.0625rem;
+  line-height: 1.55rem;
+}
+
+.dashboard-content [class~="text-xl"] {
+  font-size: 1.125rem;
+  line-height: 1.6rem;
+}
+
+.dashboard-content [class~="text-2xl"] {
+  font-size: 1.3125rem;
+  line-height: 1.8rem;
+}

@@ -30,12 +30,22 @@ import {
   Workflow,      // Routing
   ClipboardCheck, // Quality Specification
   PackageCheck,  // Packing Specification
+  ClipboardList,
+  CalendarDays,
+  Scissors,
+  Shirt,
+  Hammer,
+  Paintbrush,
+  Archive,
+  ScanLine,
+  ArrowLeftRight,
+  BarChart3,
   type LucideIcon,
 } from "lucide-react";
 
 type BadgeTone = "red" | "amber" | "slate";
 type Badge = { value: string; tone: BadgeTone };
-type Child = { label: string; href: string; icon: LucideIcon; badge?: Badge };
+type Child = { label: string; href: string; icon: LucideIcon; badge?: Badge; section?: string };
 type Item = { label: string; icon: LucideIcon; href?: string; badge?: Badge; children?: Child[] };
 type Section = { title: string; items: Item[] };
 
@@ -107,7 +117,28 @@ const SECTIONS: Section[] = [
   {
     title: "Operations",
     items: [
-      { label: "Production", icon: Factory, href: "/dashboard/production", badge: { value: "5", tone: "red" } },
+      {
+        label: "Production",
+        icon: Factory,
+        children: [
+          { section: "Overview", label: "01. Production Dashboard", href: "/dashboard/production/production-dashboard", icon: LayoutDashboard },
+          { label: "02. Production Orders", href: "/dashboard/production/production-orders", icon: ClipboardList },
+          { label: "03. Create Production Order", href: "/dashboard/production/create-production", icon: FilePlus2 },
+          { label: "04. Planning & Scheduling", href: "/dashboard/production/planning-schedule", icon: CalendarDays },
+          { section: "Material Preparation", label: "05. Material Reservation & Issue", href: "/dashboard/production/material-reservation-issue", icon: Boxes },
+          { section: "Shop Floor Workbenches", label: "06. Cutting Workbench", href: "/dashboard/production/cutting-workbench", icon: Scissors },
+          { label: "07. Stitching / Fitting Workbench", href: "/dashboard/production/stiching-workbench", icon: Shirt },
+          { label: "08. Bottom Preparation Workbench", href: "/dashboard/production/bottom-pre-workbench", icon: PackageCheck },
+          { label: "09. Lasting & Assembly", href: "/dashboard/production/lasting-assembly", icon: Hammer },
+          { label: "10. Finishing Workbench", href: "/dashboard/production/finishing-workbench", icon: Paintbrush },
+          { section: "Quality & Dispatch Preparation", label: "11. Quality Inspection & Rework", href: "/dashboard/production/quality-inspection-rework", icon: ClipboardCheck },
+          { label: "12. Packing & Cartonization", href: "/dashboard/production/packing-cartonization", icon: Package },
+          { label: "13. Finished Goods Receipt", href: "/dashboard/production/finished-goods-receipt", icon: Archive },
+          { section: "Control & Analytics", label: "14. Batch & Department Transfers", href: "/dashboard/production/batch-department-transfers", icon: ArrowLeftRight },
+          { label: "15. Batch Traceability", href: "/dashboard/production/batch-traceability", icon: ScanLine },
+          { label: "16. Production Reports & Analytics", href: "/dashboard/production/production-reports-analytics", icon: BarChart3 },
+        ],
+      },
       { label: "Product", icon: Package, href: "/dashboard/product" },
       { label: "QC", icon: ShieldCheck, href: "/dashboard/qc" },
     ],
@@ -197,7 +228,7 @@ const [openGroup, setOpenGroup] = useState<string | null>(
   const hideTip = () => setTip(null);
 
   const row =
-    "group relative flex items-center gap-3 h-10 rounded-lg px-3 text-sm font-medium " +
+    "group relative flex items-center gap-2.5 h-9 rounded-lg px-2.5 text-[13px] font-medium " +
     "transition-colors outline-none focus-visible:ring-2 focus-visible:ring-indigo-400";
 
   const renderBadge = (badge?: Badge) =>
@@ -231,7 +262,7 @@ const [openGroup, setOpenGroup] = useState<string | null>(
           className={`${row} ${active ? "bg-[#0b0b14] text-white font-semibold" : "text-slate-800 hover:bg-slate-100 hover:text-slate-900"}`}
         >
           {active && <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r bg-indigo-400" />}
-          <Icon size={19} className={`shrink-0 ${active ? "text-indigo-300" : "text-slate-500 group-hover:text-slate-700"}`} />
+          <Icon size={18} className={`shrink-0 ${active ? "text-indigo-300" : "text-slate-500 group-hover:text-slate-700"}`} />
           {!collapsed && <span className="truncate">{item.label}</span>}
           {renderBadge(item.badge)}
           {renderDot(item.badge)}
@@ -265,7 +296,7 @@ const [openGroup, setOpenGroup] = useState<string | null>(
           }`}
         >
           {groupActive && <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r bg-indigo-400" />}
-          <Icon size={19} className={`shrink-0 ${groupActive ? "text-indigo-600" : "text-slate-500 group-hover:text-slate-700"}`} />
+          <Icon size={18} className={`shrink-0 ${groupActive ? "text-indigo-600" : "text-slate-500 group-hover:text-slate-700"}`} />
           {!collapsed && (
             <>
               <span className="flex-1 text-left truncate">{item.label}</span>
@@ -275,27 +306,28 @@ const [openGroup, setOpenGroup] = useState<string | null>(
         </button>
 
         <div className={`grid transition-[grid-template-rows] duration-200 ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
-          <ul className="overflow-hidden ml-[22px] pl-3 border-l border-slate-200 space-y-0.5">
+          <ul className="overflow-hidden ml-5 pl-2 border-l border-slate-200 space-y-0.5">
             {item.children.map((child) => {
               const CIcon = child.icon;
               const active = isActive(child.href);
               return (
-                <li key={child.href} className="first:mt-1 last:mb-1">
+                <li key={child.href} className="first:mt-0.5 last:mb-0.5">
+                  {child.section && <p className="px-2 pb-1 pt-3 text-[9px] font-semibold uppercase tracking-wider text-slate-400">{child.section}</p>}
                   <Link
                     href={child.href}
                     tabIndex={open ? 0 : -1}
                     aria-current={active ? "page" : undefined}
-                    className={`flex items-center gap-2.5 min-h-9 px-2.5 py-1.5 rounded-md text-[13.5px] transition-colors
+                    className={`flex items-center gap-2 min-h-8 px-2 py-1 rounded-md text-xs transition-colors
                       outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${
                         active
                           ? "bg-[#0b0b14] text-white font-semibold"
                           : "text-slate-700 hover:text-slate-900 hover:bg-slate-100"
                       }`}
                   >
-                    <CIcon size={16} className="shrink-0" />
+                    <CIcon size={15} className="shrink-0" />
                     <span className="leading-snug">{child.label}</span>
                     {child.badge && (
-                      <span className={`ml-auto rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums ${BADGE_STYLES[child.badge.tone].pill}`}>
+                      <span className={`ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums ${BADGE_STYLES[child.badge.tone].pill}`}>
                         {child.badge.value}
                       </span>
                     )}
@@ -316,25 +348,25 @@ const [openGroup, setOpenGroup] = useState<string | null>(
           transition-[width] duration-200 ${collapsed ? "w-[80px]" : "w-68"}`}
       >
         {/* Brand */}
-        <div className={`flex items-center h-16 border-b border-slate-200 ${collapsed ? "justify-center" : "justify-between px-4"}`}>
+        <div className={`flex items-center h-14 border-b border-slate-200 ${collapsed ? "justify-center" : "justify-between px-3"}`}>
           {collapsed ? (
             <button
               onClick={() => updateCollapsed(false)}
               aria-label="Expand sidebar"
               onMouseEnter={(e) => showTip(e, "Expand")}
               onMouseLeave={hideTip}
-              className="group relative grid place-items-center w-9 h-9 rounded-lg bg-[#0b0b14] text-white outline-none focus-visible:ring-2 focus-visible:ring-indigo-300"
+              className="group relative grid place-items-center w-8 h-8 rounded-lg bg-[#0b0b14] text-white outline-none focus-visible:ring-2 focus-visible:ring-indigo-300"
             >
               <Footprints size={18} className="group-hover:opacity-0 transition-opacity" />
               <PanelLeftOpen size={18} className="absolute opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
           ) : (
             <>
-              <div className="flex items-center gap-2.5 min-w-0">
-                <span className="grid place-items-center w-9 h-9 shrink-0 rounded-lg bg-[#0b0b14] text-white">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="grid place-items-center w-8 h-8 shrink-0 rounded-lg bg-[#0b0b14] text-white">
                   <Footprints size={18} />
                 </span>
-                <span className="text-lg font-bold tracking-tight text-slate-900 truncate">{BRAND}</span>
+                <span className="text-base font-bold tracking-tight text-slate-900 truncate">{BRAND}</span>
               </div>
               <button
                 onClick={() => updateCollapsed(true)}
@@ -351,14 +383,14 @@ const [openGroup, setOpenGroup] = useState<string | null>(
         <nav
           aria-label="Main"
           onScroll={hideTip}
-          className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-3 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent]"
+          className="flex-1 overflow-y-auto overflow-x-hidden px-2 py-2 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent]"
         >
           {SECTIONS.map((section, i) => (
             <div key={section.title}>
               {collapsed ? (
                 i > 0 && <div className="mx-2 my-3 border-t border-slate-200" />
               ) : (
-                <p className={`px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-600 ${i > 0 ? "mt-5" : "mt-1"}`}>
+                <p className={`px-2 mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-600 ${i > 0 ? "mt-4" : "mt-1"}`}>
                   {section.title}
                 </p>
               )}
@@ -368,10 +400,10 @@ const [openGroup, setOpenGroup] = useState<string | null>(
         </nav>
 
         {/* User */}
-        <div className="border-t border-slate-200 p-3">
+        <div className="border-t border-slate-200 p-2">
           {collapsed ? (
-            <div className="flex flex-col items-center gap-2">
-              <span className="grid place-items-center w-9 h-9 rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700">AK</span>
+            <div className="flex flex-col items-center gap-1.5">
+              <span className="grid place-items-center w-8 h-8 rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700">AK</span>
               <button
                 aria-label="Log out"
                 onMouseEnter={(e) => showTip(e, "Log out")}
@@ -382,8 +414,8 @@ const [openGroup, setOpenGroup] = useState<string | null>(
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-2.5">
-              <span className="grid place-items-center w-9 h-9 shrink-0 rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700">AK</span>
+            <div className="flex items-center gap-2.5 rounded-xl bg-slate-50 p-2">
+              <span className="grid place-items-center w-8 h-8 shrink-0 rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700">AK</span>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-slate-900 truncate">Amit Kumar</p>
                 <p className="text-xs text-slate-500 truncate">Admin</p>

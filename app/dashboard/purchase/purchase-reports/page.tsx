@@ -60,7 +60,7 @@ export default function PurchaseReportsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl p-6">
+    <div className="mx-auto max-w-none">
       <PageHeader title="Purchase Reports" subtitle="Spend, supplier performance and delivery ageing from recorded POs, receipts and invoices."
         actions={
           <>
@@ -71,7 +71,7 @@ export default function PurchaseReportsPage() {
           </>
         } />
 
-      <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="mb-2 grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi label="Total spend" value={inr(totalSpend)} hint={period} />
         <Kpi label="Purchase orders" value={totalPOs} />
         <Kpi label="Avg on-time delivery" value={`${avgOnTime.toFixed(0)}%`} hint="Suppliers with history only" />
@@ -81,7 +81,7 @@ export default function PurchaseReportsPage() {
       <Tabs tabs={REPORTS} value={report} onChange={setReport} />
 
       {report === "Spend analysis" && (
-        <div className="mt-5 grid gap-5 lg:grid-cols-2">
+        <div className="mt-2 grid gap-5 lg:grid-cols-2">
           <Card title="Monthly spend">
             <div className="flex h-48 items-end gap-3" role="img" aria-label="Monthly spend bar chart">
               {SPEND_BY_MONTH.map((v, i) => (
@@ -120,7 +120,7 @@ export default function PurchaseReportsPage() {
       )}
 
       {report === "Supplier performance" && (
-        <Card className="mt-5" flush>
+        <Card className="mt-2" flush>
           <TableWrap>
             <thead className="bg-slate-50"><tr>
               <th className={th}>Supplier</th><th className={thR}>On-time delivery</th><th className={thR}>Accepted quality</th><th className={thR}>Avg lead time</th><th className={th}>Rating</th>
@@ -148,7 +148,7 @@ export default function PurchaseReportsPage() {
       )}
 
       {report === "Open PO ageing" && (
-        <Card title="Open POs by delivery lateness" className="mt-5">
+        <Card title="Open POs by delivery lateness" className="mt-2">
           <ul className="space-y-3">
             {OPEN_PO_AGING.map((b) => (
               <li key={b.bucket}>
