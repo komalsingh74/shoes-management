@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
@@ -23,8 +24,8 @@ export function Workbench({ title, description, kpis, jobs, steps, metricLabel, 
   const [checked, setChecked] = useState<string[]>([])
   const toggle = (s: string) => setChecked((c) => (c.includes(s) ? c.filter((x) => x !== s) : [...c, s]))
   return (
-    <div className="space-y-3 p-0">
-      <PageHeader title={title} description={description} action={<Button className={btnPrimary}>Start next job</Button>} />
+    <div className="space-y-2 p-0">
+      <PageHeader title={title} description={description} action={<Button asChild className={btnPrimary}><Link href="/dashboard/production/production-management?tab=create">Create Production Order</Link></Button>} />
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {kpis.map((k) => <Kpi key={k.label} {...k} />)}
       </div>

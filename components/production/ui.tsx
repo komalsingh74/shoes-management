@@ -1,16 +1,17 @@
 import { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { Card } from "@/components/ui/card"
+import { SummaryCard } from "./summary-card"
 
 export const btnPrimary =
-  "h-12 rounded-xl bg-black px-6 text-base font-semibold text-white shadow-md hover:bg-black/90"
+  "h-11 shrink-0 rounded-xl bg-[#0b0b14] px-5 font-semibold text-white shadow-lg shadow-indigo-900/20 hover:bg-[#12121f]"
 
 export function PageHeader({ title, description, action }: { title: string; description: string; action?: ReactNode }) {
   return (
-    <Card className="flex-row items-center justify-between gap-4 rounded-2xl border p-6 shadow-sm">
+    <Card className="min-h-20 flex-col items-start justify-between gap-3 rounded-2xl bg-linear-to-br from-white to-slate-50/80 px-5 py-2 ring-1 ring-slate-200/80 shadow-sm sm:flex-row sm:items-center">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-        <p className="mt-1 text-muted-foreground">{description}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
+        <p className="mt-1 text-sm text-slate-500">{description}</p>
       </div>
       {action}
     </Card>
@@ -19,22 +20,18 @@ export function PageHeader({ title, description, action }: { title: string; desc
 
 export function Kpi({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone?: "red" | "green" }) {
   return (
-    <Card className="gap-1 rounded-2xl p-6 shadow-sm">
-      <p className="text-muted-foreground">{label}</p>
-      <p className={cn("text-3xl font-bold tracking-tight", tone === "red" && "text-red-600", tone === "green" && "text-emerald-600")}>{value}</p>
-      <p className="h-5 text-sm text-muted-foreground">{sub}</p>
-    </Card>
+    <SummaryCard label={label} value={value} sub={sub} tone={tone === "red" ? "bg-rose-50 text-rose-600" : tone === "green" ? "bg-emerald-50 text-emerald-600" : undefined} />
   )
 }
 
 export function Section({ title, action, children, className, flush }: { title: string; action?: ReactNode; children: ReactNode; className?: string; flush?: boolean }) {
   return (
-    <Card className={cn("gap-0 overflow-hidden rounded-2xl p-0 shadow-sm", className)}>
-      <div className="flex items-center justify-between border-b px-6 py-5">
+    <Card className={cn("gap-0 overflow-hidden rounded-2xl px-0 py-2 shadow-sm", className)}>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-2">
         <h2 className="text-lg font-semibold">{title}</h2>
         {action}
       </div>
-      <div className={flush ? "" : "p-6"}>{children}</div>
+      <div className={flush ? "" : "px-5 py-2"}>{children}</div>
     </Card>
   )
 }
