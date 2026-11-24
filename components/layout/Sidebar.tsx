@@ -39,6 +39,13 @@ import {
   ScanLine,
   ArrowLeftRight,
   BarChart3,
+  Building2,
+  UsersRound,
+  Shield,
+  LockKeyhole,
+  Layers3,
+  UserRoundCog,
+  Settings2,
   type LucideIcon,
 } from "lucide-react";
 
@@ -159,6 +166,18 @@ const SECTIONS: Section[] = [
         ],
       },
       { label: "Store", icon: Store, href: "/dashboard/store" },
+      {
+        label: "Settings",
+        icon: Settings2,
+        children: [
+          { label: "Company & Factory", href: "/dashboard/settings/company-factory", icon: Building2 },
+          { label: "User Management", href: "/dashboard/settings/user-management", icon: UsersRound },
+          { label: "Role Management", href: "/dashboard/settings/role-management", icon: Shield },
+          { label: "Permission Matrix", href: "/dashboard/settings/permission-matrix", icon: LockKeyhole },
+          { label: "Module Management", href: "/dashboard/settings/module-management", icon: Layers3 },
+          { label: "Assignments", href: "/dashboard/settings/assignments", icon: UserRoundCog },
+        ],
+      },
     ],
   },
 ];
